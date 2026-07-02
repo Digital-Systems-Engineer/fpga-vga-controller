@@ -69,15 +69,23 @@ begin
                     VGA_G <= DATA( 7 downto 4);
                     VGA_B <= DATA( 3 downto 0);
                 else
-                    VGA_R <= (others => '0');
-                    VGA_G <= (others => '0');
-                    VGA_B <= (others => '0');
+                    -- Visible area but outside the image window : output
+                    -- black AND reset the ROM address so that the first
+                    -- pixel of the next image line does not display stale
+                    -- data from the end of the previous line.
+                    VGA_R   <= (others => '0');
+                    VGA_G   <= (others => '0');
+                    VGA_B   <= (others => '0');
+                    address <= (others => '0');
                 end if;
 
             else
-                VGA_R <= (others => '0');
-                VGA_G <= (others => '0');
-                VGA_B <= (others => '0');
+                -- Blanking (front porch, sync, back porch) : idem, reset
+                -- both the VGA output and the ROM address.
+                VGA_R   <= (others => '0');
+                VGA_G   <= (others => '0');
+                VGA_B   <= (others => '0');
+                address <= (others => '0');
             end if;
         end if;
     end process;
