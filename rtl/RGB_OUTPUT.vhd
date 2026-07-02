@@ -39,7 +39,7 @@ architecture Behavioral of RGB_OUTPUT is
         -- pipeline (RGB_OUTPUT address register + altsyncram address
         -- register + altsyncram output register + RGB_OUTPUT VGA register
         -- = 4 clock cycles from HCOUNTER to VGA_R).
-        constant PIPE_LATENCY : integer := 17;
+        constant PIPE_LATENCY : integer := 4;
         constant H_centre : integer := (144 + 784) / 2;
         constant V_centre : integer := (31 + 511) / 2;
         constant H_min : integer := H_centre - IMG_WIDTH / 2 - PIPE_LATENCY;
