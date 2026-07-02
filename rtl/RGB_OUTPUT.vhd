@@ -34,10 +34,15 @@ end RGB_OUTPUT;
 architecture Behavioral of RGB_OUTPUT is
 
         
-        -- calcules des constantes
-        constant H_centre : integer := (144 + 784) / 2; 
+        -- Position of the image inside the 640x480 visible area.
+        -- H_min is shifted 4 pixels earlier to compensate for the read
+        -- pipeline (RGB_OUTPUT address register + altsyncram address
+        -- register + altsyncram output register + RGB_OUTPUT VGA register
+        -- = 4 clock cycles from HCOUNTER to VGA_R).
+        constant PIPE_LATENCY : integer := 4;
+        constant H_centre : integer := (144 + 784) / 2;
         constant V_centre : integer := (31 + 511) / 2;
-        constant H_min : integer := H_centre - IMG_WIDTH / 2;
+        constant H_min : integer := H_centre - IMG_WIDTH / 2 - PIPE_LATENCY;
         constant V_min : integer := V_centre - IMG_HEIGHT / 2;
         constant H_max : integer := H_min + IMG_WIDTH -1;
         constant V_max : integer := V_min + IMG_HEIGHT-1;
