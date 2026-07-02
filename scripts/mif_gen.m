@@ -20,18 +20,16 @@ VECTOR_B = img(:,:,3);
 N = L*C;                  % Total RAM size (number of pixels)
 word_len = 12;            % Word size: 12 bits per pixel (4 bits R + 4 bits G + 4 bits B)
 
-% Reshape the matrices into a 1xN vector (linear addressing)
-data_R = reshape(VECTOR_R, 1, N);
-data_G = reshape(VECTOR_G, 1, N);
-data_B = reshape(VECTOR_B, 1, N);
-
 % Convert each channel from 8 bits (0-255) down to 4 bits (0-15).
 % We divide by 17 instead of 16 to avoid overflow:
 % 255/16 = 15.9375 -> would round up to 16 = b'10000' (5 bits), which exceeds 4 bits.
 % 255/17 = 15      -> stays within 4 bits.
-data_R = VECTOR_R./17;
-data_G = VECTOR_G./17;
-data_B = VECTOR_B./17;
+% The transpose (') is important : it flips the matrix so the reshape
+% below produces a row-major linear vector, matching the FPGA addressing
+% scheme address = v * IMG_WIDTH + h used in RGB_OUTPUT.
+data_R = reshape(VECTOR_R', 1, N) ./ 17;
+data_G = reshape(VECTOR_G', 1, N) ./ 17;
+data_B = reshape(VECTOR_B', 1, N) ./ 17;
 
 % Create / open the output .mif file
 fid = fopen('PERROQUET.mif', 'w');
